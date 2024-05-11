@@ -7,14 +7,15 @@
  
       <template v-for="(answer, index) in this.answers" v-bind:key="index"> 
         <input 
+         :disabled="this.answerSubmitted"
          type="radio"
          name="options" 
-         value="answer"
+         :value="answer"
          v-model="this.chosen_answers"> 
         <label v-html="answer"></label><br>
       </template>
 
-      <button class="send" type="button">Send</button>
+      <button @click="this.submitAnswer()" class="send" type="button">Send</button>
 
     </template>
 
@@ -32,6 +33,7 @@ export default {
       incorrectAnswers: undefined,
       correctAnswer: undefined,
       chosen_answers: undefined,
+      answerSubmitted: false
     }
   },
 
@@ -42,7 +44,21 @@ export default {
       return answers;
     }
   },
+  methods:{
 
+    submitAnswer() {
+      if (!this.chosen_answers) {
+        alert('Pick one of the options');
+      } else {
+        this.answerSubmitted = true;
+        if (this.chosen_answers == this.correctAnswer){
+            console.log('You got it right!');
+          } else {
+            console.log('You got it wrong');
+        }
+      }
+    }
+  },
   created(){
     this.axios
     .get('https://opentdb.com/api.php?amount=1')
